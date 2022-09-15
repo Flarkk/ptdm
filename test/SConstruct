@@ -1,0 +1,44 @@
+#!python
+import os, subprocess
+
+opts = Variables([], ARGUMENTS)
+
+opts.Add(EnumVariable('platform', "Compilation platform.", '', ['', 'windows', 'linux', 'osx']))
+opts.Add(BoolVariable('use_llvm', "Use the LLVM / Clang compiler.", 'yes'))
+opts.Add(PathVariable('target_path', 'The path where the executable is installed to.', 'bin/'))
+
+env = DefaultEnvironment()
+opts.Update(env)
+
+target = env['target_path'] + 'test'
+
+if env['use_llvm'] and env['platform'] != 'windows':
+    env['CC'] = 'clang'
+    env['CXX'] = 'clang'
+
+if env['platform'] == '':
+    print("No valid target platform selected.")
+    quit();
+
+if env['platform'] == "osx":
+    target += '.osx'
+    # To be completed eventually
+
+elif env['platform'] == "linux":
+    target += ".linux"
+    env.Append(CCFLAGS = ['-std=c++20', '-stdlib=libc++', '-g'])
+    env.Append(LINKFLAGS = ['-fuse-ld=lld', '-lc++'])
+
+elif env['platform'] == "windows":
+    target += '.win'
+     # To be completed eventually
+
+env.Append(CPPPATH="../") # to be able to include "ptdm/..."
+
+sources =      Glob('*.cpp')
+sources.append(Glob('*/*.cpp'))
+
+tests = env.Program(target = target , source = sources)
+Default(tests)
+
+Help(opts.GenerateHelpText(env))
