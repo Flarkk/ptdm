@@ -1,6 +1,6 @@
 Pointer-To-Deep-data-Member
 ===========================
-**ptdm** extends C++ built-in pointers-to-data-members and adds support of pointing to nested members (i.e. data members of a data member of a class, at any depth).
+**ptdm** extends C++ built-in pointers-to-data-members to support nested members (i.e. data members of a data member of a class, at any depth).
 
 Dependencies
 ------------
